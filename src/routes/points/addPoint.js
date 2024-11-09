@@ -1,7 +1,26 @@
 const app = require("../../config/express");
+const { colorText } = require("../../config/logger");
 const { PointModel } = require("../../db/models/PointModel");
 const authRequest = require("../../middlewares/auth");
 const requireFields = require("../../middlewares/fields");
+
+/**
+ * Эндпоинт для добавления новой точки
+ * 
+ * @route POST /v1/points/add
+ * @middleware authRequest - Авторизационный мидлвэйр
+ * @middleware requireFields(['x', 'y', 'organid', 'name', 'description']) - Мидлвэйр для проверки обязательных полей
+ * 
+ * @param {number} req.body.x - Координата X точки
+ * @param {number} req.body.y - Координата Y точки
+ * @param {number} req.body.organid - ID органа, связанного с точкой
+ * @param {string} req.body.name - Название точки
+ * @param {string} req.body.description - Описание точки
+ * 
+ * @param {Object} res - Объект ответа
+ * 
+ * @returns {Object} - JSON объект с сообщением об успешном добавлении и ID новой точки
+ */
 
 app.post("/v1/points/add", authRequest, requireFields(['x', 'y', 'organid', 'name', 'description']), async (req, res) => {
     try {
@@ -14,6 +33,7 @@ app.post("/v1/points/add", authRequest, requireFields(['x', 'y', 'organid', 'nam
             point_id: point.id
         })
     } catch (e) {
+        logger.error(`Error while adding new point: ${colorText(e.message, 'red')}`)
         res.status(500).send({ error: e.message });
     }
 });
