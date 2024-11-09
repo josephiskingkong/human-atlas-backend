@@ -4,6 +4,7 @@ const app = express()
 const port = process.env.API_PORT;
 
 app.use(express.json());
+app.use(cors());
 
 app.listen(port, () => {
     logger.info(`App listening on port ${colorText(port, 'green')}`)
