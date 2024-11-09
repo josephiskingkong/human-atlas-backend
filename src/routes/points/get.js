@@ -1,7 +1,8 @@
 const app = require("../../config/express");
+const { logger, colorText } = require("../../config/logger");
 const { PointModel } = require("../../db/models/PointModel");
 const authRequest = require("../../middlewares/auth");
-const requireFields = require("../../middlewares/fields");
+const { requireParamFields } = require("../../middlewares/fields");
 
 /**
  * Эндпоинт для получения информации о точке по её айди
@@ -17,9 +18,9 @@ const requireFields = require("../../middlewares/fields");
  * @returns {Object} - JSON объект с данными точки
  */
 
-app.post("/v1/points/get", authRequest, requireFields(['id']), async (req, res) => {
+app.get("/v1/points/get/:id", requireParamFields(['id']), async (req, res) => {
     try {
-        const { id } = req.body;
+        const { id } = req.params;
 
         const point = await PointModel.findOne({ where: { id } })
 
@@ -55,9 +56,9 @@ app.post("/v1/points/get", authRequest, requireFields(['id']), async (req, res) 
  * @returns {Object} - JSON массив объектов с данными точек
  */
 
-app.post("/v1/points/get-by-organid", authRequest, requireFields(['organid']), async (req, res) => {
+app.get("/v1/points/get-by-organid/:organid", requireParamFields(['organid']), async (req, res) => {
     try {
-        const { organid } = req.body;
+        const { organid } = req.params;
 
         const points = await PointModel.findAll({ where: { organid } });
 

@@ -1,8 +1,8 @@
 const app = require("../../config/express");
-const { colorText } = require("../../config/logger");
+const { colorText, logger } = require("../../config/logger");
 const { PointModel } = require("../../db/models/PointModel");
 const authRequest = require("../../middlewares/auth");
-const requireFields = require("../../middlewares/fields");
+const { requireBodyFields } = require("../../middlewares/fields");
 
 /**
  * Эндпоинт для добавления новой точки
@@ -22,11 +22,13 @@ const requireFields = require("../../middlewares/fields");
  * @returns {Object} - JSON объект с сообщением об успешном добавлении и ID новой точки
  */
 
-app.post("/v1/points/add", authRequest, requireFields(['x', 'y', 'organid', 'name', 'description']), async (req, res) => {
+app.post("/v1/points/add", authRequest, requireBodyFields(['x', 'y', 'organid', 'name', 'description']), async (req, res) => {
     try {
         const { x, y, organid, name, description } = req.body;
 
         const point = await PointModel.create({ x, y, organid, name, description })
+
+        logger.info(`Point ${colorText('created', 'green')}: ID=${point.id}, x=${x}, y=${y}, organid=${organid}, name="${name}"`);
 
         return res.status(200).json({
             message: "success",
