@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const { logger, colorText } = require('./logger');
 const app = express()
 const port = process.env.API_PORT;
