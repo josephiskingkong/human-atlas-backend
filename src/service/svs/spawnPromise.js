@@ -1,4 +1,5 @@
 const { spawn } = require("child_process");
+const { logger } = require("../../config/logger");
 
 function spawnPromise(command, args) {
     return new Promise((resolve, reject) => {
