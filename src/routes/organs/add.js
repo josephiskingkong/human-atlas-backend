@@ -72,7 +72,7 @@ app.post("/v1/organs/add", authRequest, (req, res) => {
                     const metadata = await getSvsMetadata(targetPath);
 
                     await OrganModel.update(
-                        { mpp_x: metadata.mppX, mpp_y: metadata.mppY },
+                        { mpp_x: metadata.mppX, mpp_y: metadata.mppY, width: metadata.width, height: metadata.height },
                         { where: { id: organ.id } }
                     );
 

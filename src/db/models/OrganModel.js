@@ -22,6 +22,12 @@ const OrganModel = db.define('organs', {
     },
     mpp_y: {
         type: DataTypes.FLOAT
+    },
+    width: { 
+        type: DataTypes.BIGINT
+    },
+    height: {
+        type: DataTypes.BIGINT
     }
 })
 
