@@ -76,7 +76,7 @@ app.post("/v1/organs/add", authRequest, (req, res) => {
                         { where: { id: organ.id } }
                     );
 
-                    const organTilesDir = `/var/www/human-atlas-tiles/tiles/${organ.id}`;
+                    const organTilesDir = `/var/www/human-atlas-tiles/tiles/${organ.id}/${organ.id}`;
                     await convertSvsToTiles(targetPath, organTilesDir);
 
                     await OrganModel.update({ status: 'DONE' }, { where: { id: organ.id } });
