@@ -63,7 +63,7 @@ app.get("/v1/points/get-by-organid/:organid", requireParamFields(['organid']), a
         const points = await PointModel.findAll({ where: { organid } });
 
         if (points.length === 0) {
-            return res.status(404).send({ error: "No points found for the specified organid" });
+            return res.status(200).send([]);
         }
 
         return res.status(200).json(points.map(point => ({

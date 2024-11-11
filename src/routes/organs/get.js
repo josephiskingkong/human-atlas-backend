@@ -66,7 +66,7 @@ app.get("/v1/organs/get-by-categoryid/:categoryid", requireParamFields(['categor
         const organs = await OrganModel.findAll({ where: { categoryid, status: "DONE" } });
 
         if (organs.length === 0) {
-            return res.status(404).send({ error: "No organs found for the specified categoryid" });
+            return res.status(200).send([]);
         }
 
         return res.status(200).json(organs.map(organ => ({
@@ -101,7 +101,7 @@ app.get("/v1/organs/get-all/", authRequest, async (req, res) => {
         const organs = await OrganModel.findAll();
 
         if (organs.length === 0) {
-            return res.status(404).send({ error: "No organs found" });
+            return res.status(200).send([]);
         }
 
         return res.status(200).json(organs.map(organ => ({
