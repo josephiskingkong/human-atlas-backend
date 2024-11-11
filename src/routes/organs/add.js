@@ -84,8 +84,8 @@ app.post("/v1/organs/add", authRequest, (req, res) => {
                     fs.unlink(targetPath)
                     logger.info(`Organ ${colorText('processed', 'green')}: ID=${organ.id}, name="${name}"`);
                 } catch (error) {
-                    logger.error(`Error processing organ ID=${organ.id}: ${colorText(error.message, 'red')}`);
                     if (!error.message.includes("WARNING")) {
+                        logger.error(`Error processing organ ID=${organ.id}: ${colorText(error.message, 'red')}`);
                         await OrganModel.update({ status: 'ERROR' }, { where: { id: organ.id } });
                     }
                 }

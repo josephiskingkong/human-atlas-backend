@@ -11,7 +11,12 @@ function spawnPromise(command, args) {
         });
 
         process.stderr.on('data', (data) => {
-            stderr += data.toString();
+            const errorOutput = data.toString();
+            if (errorOutput.includes('WARNING')) {
+                logger.warn(`vips warning: ${colorText(errorOutput, 'yellow')}`);
+            } else {
+                stderr += errorOutput;
+            }
         });
 
         process.on('close', (code) => {
