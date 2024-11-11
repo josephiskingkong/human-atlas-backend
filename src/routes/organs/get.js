@@ -35,7 +35,9 @@ app.get("/v1/organs/get/:id", requireParamFields(['id']), async (req, res) => {
             name: organ.name,
             synonym: organ.synonym,
             mpp_x: organ.mpp_x,
-            mpp_y: organ.mpp_y
+            mpp_y: organ.mpp_y,
+            width: organ.width,
+            height: organ.height
         })
     } catch (e) {
         logger.error(`Error while getting organ by id: ${colorText(e.message, 'red')}`)
@@ -74,6 +76,8 @@ app.get("/v1/organs/get-by-categoryid/:categoryid", requireParamFields(['categor
             synonym: organ.synonym,
             mpp_x: organ.mpp_x,
             mpp_y: organ.mpp_y,
+            width: organ.width,
+            height: organ.height
         })));
     } catch (e) {
         logger.error(`Error while getting organs by category id: ${colorText(e.message, 'red')}`)
@@ -107,6 +111,8 @@ app.get("/v1/organs/get-all/", authRequest, async (req, res) => {
             synonym: organ.synonym,
             mpp_x: organ.mpp_x,
             mpp_y: organ.mpp_y,
+            width: organ.width,
+            height: organ.height,
             status: organ.status
         })));
     } catch (e) {
