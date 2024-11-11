@@ -1,4 +1,5 @@
 const { spawn } = require("child_process");
+const { logger, colorText } = require("../../config/logger");
 
 function spawnPromise(command, args) {
     return new Promise((resolve, reject) => {
@@ -11,7 +12,12 @@ function spawnPromise(command, args) {
         });
 
         process.stderr.on('data', (data) => {
-            stderr += data.toString();
+            const errorOutput = data.toString();
+            if (errorOutput.includes('WARNING')) {
+                logger.warn(`vips warning: ${colorText(errorOutput, 'yellow')}`);
+            } else {
+                stderr += errorOutput;
+            }
         });
 
         process.on('close', (code) => {
