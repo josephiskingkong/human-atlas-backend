@@ -76,18 +76,20 @@ app.post("/v1/organs/add", authRequest, (req, res) => {
                         { where: { id: organ.id } }
                     );
 
-                    const organTilesDir = `/var/www/human-atlas-tiles/tiles/${organ.id}/${organ.id}`;
+                    const organTilesDir = `/var/www/human-atlas-tiles/tiles/${organ.id}`;
+                    fs.mkdirSync(organTilesDir, { recursive: true });
+
                     await convertSvsToTiles(targetPath, organTilesDir);
 
                     await OrganModel.update({ status: 'DONE' }, { where: { id: organ.id } });
 
-                    fs.unlink(targetPath)
+                    fs.unlink(targetPath, (err) => {
+                        if (err) logger.warn(`Failed to delete the file: ${targetPath}`);
+                    });
                     logger.info(`Organ ${colorText('processed', 'green')}: ID=${organ.id}, name="${name}"`);
                 } catch (error) {
-                    if (!error.message.includes("WARNING")) {
-                        logger.error(`Error processing organ ID=${organ.id}: ${colorText(error.message, 'red')}`);
-                        await OrganModel.update({ status: 'ERROR' }, { where: { id: organ.id } });
-                    }
+                    logger.error(`Error processing organ ID=${organ.id}: ${colorText(error.message, 'red')}`);
+                    await OrganModel.update({ status: 'ERROR' }, { where: { id: organ.id } });
                 }
             })();
         } catch (e) {
