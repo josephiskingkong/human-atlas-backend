@@ -6,12 +6,18 @@ async function getSvsMetadata(inputFile) {
 
     try {
         const output = await spawnPromise(command, args);
+
         const mppXMatch = output.match(/openslide\.mpp-x:\s*([\d.]+)/);
         const mppYMatch = output.match(/openslide\.mpp-y:\s*([\d.]+)/);
         const mppX = mppXMatch ? parseFloat(mppXMatch[1]) : null;
         const mppY = mppYMatch ? parseFloat(mppYMatch[1]) : null;
+        
+        const widthMatch = output.match(/width:\s*(\d+)/);
+        const heightMatch = output.match(/height:\s*(\d+)/);
+        const width = widthMatch ? parseInt(widthMatch[1], 10) : null;
+        const height = heightMatch ? parseInt(heightMatch[1], 10) : null;
 
-        return { mppX, mppY, rawOutput: output };
+        return { mppX, mppY, width, height, rawOutput: output };
     } catch (error) {
         throw new Error(`Error extracting metadata: ${error}`);
     }
