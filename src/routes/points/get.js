@@ -60,7 +60,7 @@ app.get("/v1/points/get-by-organid/:organid", requireParamFields(['organid']), a
     try {
         const { organid } = req.params;
 
-        const points = await PointModel.findAll({ where: { organid } });
+        const points = await PointModel.findAll({ where: { organid }, order: [['id', 'ASC']] });
 
         if (points.length === 0) {
             return res.status(200).send([]);
