@@ -79,7 +79,7 @@ app.post("/v1/organs/add", authRequest, (req, res) => {
                     const organTilesDir = `/var/www/human-atlas-tiles/tiles/${organ.id}`;
                     fs.mkdirSync(organTilesDir, { recursive: true });
 
-                    await convertSvsToTiles(targetPath, organTilesDir);
+                    await convertSvsToTiles(targetPath, `${organTilesDir}/${organ.id}`);
 
                     await OrganModel.update({ status: 'DONE' }, { where: { id: organ.id } });
 
