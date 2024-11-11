@@ -15,7 +15,7 @@ const upload = multer({
         if (path.extname(file.originalname).toLowerCase() === '.svs') {
             cb(null, true);
         } else {
-            cb(new Error('Only .svs files are allowed'));
+            cb(new Error('Only .svs files are allowed'), false);
         }
     }
 });
