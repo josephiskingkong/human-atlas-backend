@@ -8,7 +8,6 @@ const app = require('../../config/express');
 const authRequest = require('../../middlewares/auth');
 const { logger, colorText } = require('../../config/logger');
 const { convertSvsToTiles, getSvsMetadata } = require('../../service/svs/svs');
-const cors = require('cors');
 
 const upload = multer({
     dest: '../../public/organs', 
@@ -40,7 +39,7 @@ const upload = multer({
  * @returns {Object} - JSON объект с сообщением об успешном добавлении и ID нового органа
  */
 
-app.post("/v1/organs/add", cors(), authRequest, (req, res) => {
+app.post("/v1/organs/add", authRequest, (req, res) => {
     upload.single('file')(req, res, async (err) => {
         if (err) {
             logger.error(`Upload error: ${colorText(err.message, 'red')}`);
