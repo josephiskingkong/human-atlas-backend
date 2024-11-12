@@ -25,7 +25,7 @@ async function getSvsMetadata(inputFile) {
 
 async function convertSvsToTiles(inputFile, outputDir) {
     const command = 'vips';
-    const args = ['dzsave', inputFile, outputDir, '--suffix', '.png', '--tile-size', '512', '--overlap', '1'];
+    const args = ['dzsave', inputFile, outputDir, '--suffix', '.png', '--tile-size', '512', '--overlap', '3'];
     await spawnPromise(command, args);
 }
 
