@@ -67,3 +67,36 @@ app.get("/v1/categories/get-by-categoryid/:categoryid", requireParamFields(['cat
         res.status(500).send({ error: e.message });
     }
 });
+
+/**
+ * Эндпоинт для получения информации о категории по её ID
+ * 
+ * @route POST /v1/categories/get/:id
+ * 
+ * @param {Object} id - ID категории
+ * 
+ * @param {Object} res - Объект ответа
+ * 
+ * @returns {Object} - JSON объект с данными о категории
+ */
+
+app.get("/v1/categories/get/:id", requireParamFields(['id']), async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const category = await CategoryModel.findOne({ where: { id } });
+
+        if (!category) {
+            return res.status(404).send("Category not found");
+        }
+
+        return res.status(200).json({
+            id: category.id,
+            name: category.name,
+            categoryid: category.categoryid
+        });
+    } catch (e) {
+        logger.error(`Error while getting categories by category id: ${colorText(e.message, 'red')}`)
+        res.status(500).send({ error: e.message });
+    }
+});
