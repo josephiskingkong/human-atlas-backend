@@ -73,6 +73,7 @@ app.get("/v1/organs/get-by-categoryid/:categoryid", requireParamFields(['categor
             id: organ.id,
             categoryid: organ.categoryid,
             name: organ.name,
+            status: organ.status,
             synonym: organ.synonym,
             mpp_x: organ.mpp_x,
             mpp_y: organ.mpp_y,
