@@ -11,3 +11,4 @@ require('./organs/get');
 // CATEGORIES:
 require('./categories/add');
 require('./categories/get');
+require('./categories/delete');

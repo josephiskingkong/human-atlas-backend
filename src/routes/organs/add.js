@@ -65,7 +65,7 @@ app.post("/v1/organs/add", cors(), authRequest, (req, res) => {
 
             const organ = await OrganModel.create({ name, categoryid, synonym, status: 'PROCESSING' });
 
-            res.status(201).json({ message: "success", organ_id: organ.id });
+            res.status(201).json({ message: "success", organ_id: organ.id, name: organ.name, status: organ.status });
 
             (async () => {
                 try {
