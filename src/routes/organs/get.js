@@ -63,7 +63,7 @@ app.get("/v1/organs/get-by-categoryid/:categoryid", requireParamFields(['categor
     try {
         const { categoryid } = req.params;
 
-        const organs = await OrganModel.findAll({ where: { categoryid, status: "DONE" } });
+        const organs = await OrganModel.findAll({ where: { categoryid } });
 
         if (organs.length === 0) {
             return res.status(200).send([]);
