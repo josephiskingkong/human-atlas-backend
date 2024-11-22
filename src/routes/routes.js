@@ -7,8 +7,8 @@ require('./points/edit');
 // ORGANS:
 require('./organs/add');
 require('./organs/get');
+require('./organs/delete');
 
 // CATEGORIES:
 require('./categories/add');
 require('./categories/get');
-require('./categories/delete');
