@@ -23,7 +23,7 @@ const { requireBodyFields } = require('../../middlewares/fields');
  * @returns {Object} - JSON объект с сообщением об успешном удалении органа
  */
 
-app.delete("/v1/organs/delete", requireBodyFields['id'], authRequest, async (req, res) => {
+app.delete("/v1/organs/delete", authRequest, requireBodyFields(['id']), async (req, res) => {
     try {
         const { id } = req.body;
         const path = `/var/www/human-atlas-tiles/tiles/${id}`;
