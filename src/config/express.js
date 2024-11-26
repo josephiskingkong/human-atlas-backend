@@ -15,18 +15,19 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'X-XSRF-TOKEN'],
 }));
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Credentials', 'true');
-    next();
-});
-
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-const csrfProtection = csrf({
-    cookie: true
-});
+const csrfProtection = csrf({ cookie: true });
 app.use(csrfProtection);
+
+app.options('*', cors()); 
+
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+    console.log('Headers:', req.headers);
+    next();
+});
 
 app.listen(port, () => {
     logger.info(`App listening on port ${colorText(port, 'green')}`);
