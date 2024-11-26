@@ -40,7 +40,7 @@ const upload = multer({
  * @returns {Object} - JSON объект с сообщением об успешном добавлении и ID нового органа
  */
 
-app.post("/v1/organs/add", cors(), authenticateToken, (req, res) => {
+app.post("/v1/organs/add", authenticateToken, (req, res) => {
     upload.single('file')(req, res, async (err) => {
         if (err) {
             logger.error(`Upload error: ${colorText(err.message, 'red')}`);
