@@ -7,7 +7,6 @@ const { OrganModel } = require('../../db/models/OrganModel');
 const app = require('../../config/express');
 const { logger, colorText } = require('../../config/logger');
 const { convertSvsToTiles, getSvsMetadata } = require('../../service/svs/svs');
-const cors = require('cors');
 const { requireBodyFields } = require('../../middlewares/fields');
 const { authenticateToken } = require('../users/auth');
 

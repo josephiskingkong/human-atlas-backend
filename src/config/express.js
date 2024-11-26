@@ -8,10 +8,20 @@ const csrf = require('csurf');
 const app = express();
 const port = process.env.API_PORT;
 
+
 app.use(cors({
     origin: 'http://localhost:3000',
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-XSRF-TOKEN'],
 }));
+
+app.options('*', cors());
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
+});
 
 app.use(bodyParser.json());
 app.use(cookieParser());
