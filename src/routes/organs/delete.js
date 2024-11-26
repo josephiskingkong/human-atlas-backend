@@ -5,11 +5,11 @@ const fs = require('fs');
 const { spawn } = require('child_process');
 const { OrganModel } = require('../../db/models/OrganModel');
 const app = require('../../config/express');
-const authRequest = require('../../middlewares/auth');
 const { logger, colorText } = require('../../config/logger');
 const { convertSvsToTiles, getSvsMetadata } = require('../../service/svs/svs');
 const cors = require('cors');
 const { requireBodyFields } = require('../../middlewares/fields');
+const { authenticateToken } = require('../users/auth');
 
 /**
  * Эндпоинт для удаления органа по его ID
@@ -23,7 +23,7 @@ const { requireBodyFields } = require('../../middlewares/fields');
  * @returns {Object} - JSON объект с сообщением об успешном удалении органа
  */
 
-app.delete("/v1/organs/delete", authRequest, requireBodyFields(['id']), async (req, res) => {
+app.delete("/v1/organs/delete", authenticateToken, requireBodyFields(['id']), async (req, res) => {
     try {
         const { id } = req.body;
         const path = `/var/www/human-atlas-tiles/tiles/${id}`;

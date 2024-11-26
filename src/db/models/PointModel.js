@@ -15,10 +15,10 @@ const PointModel = db.define('points', {
         type: DataTypes.FLOAT, allowNull: false
     },
     name: {
-        type: DataTypes.STRING
+        type: DataTypes.TEXT
     },
     description: {
-        type: DataTypes.STRING
+        type: DataTypes.TEXT
     }
 })
 

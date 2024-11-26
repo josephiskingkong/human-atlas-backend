@@ -1,8 +1,8 @@
 const app = require("../../config/express");
 const { logger, colorText } = require("../../config/logger");
 const { PointModel } = require("../../db/models/PointModel");
-const authRequest = require("../../middlewares/auth");
 const { requireBodyFields } = require("../../middlewares/fields");
+const { authenticateToken } = require("../users/auth");
 
 /**
  * Эндпоинт для удаления точки по её айди
@@ -18,7 +18,7 @@ const { requireBodyFields } = require("../../middlewares/fields");
  * @returns {Object} - JSON объект с сообщением об успешном удалении или ошибкой
  */
 
-app.delete("/v1/points/delete", authRequest, requireBodyFields(['id']), async (req, res) => {
+app.delete("/v1/points/delete", authenticateToken, requireBodyFields(['id']), async (req, res) => {
     try {
         const { id } = req.body;
 

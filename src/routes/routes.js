@@ -12,3 +12,9 @@ require('./organs/delete');
 // CATEGORIES:
 require('./categories/add');
 require('./categories/get');
+
+// USERS:
+require('./users/register');
+require('./users/csrf');
+require('./users/login');
+require('./users/profile');

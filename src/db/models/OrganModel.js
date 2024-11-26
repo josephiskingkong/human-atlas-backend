@@ -6,10 +6,10 @@ const OrganModel = db.define('organs', {
         type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true
     },
     name: {
-        type: DataTypes.STRING, allowNull: false
+        type: DataTypes.TEXT, allowNull: false
     },
     synonym: {
-        type: DataTypes.STRING, allowNull: false 
+        type: DataTypes.TEXT, allowNull: false 
     },
     categoryid: {
         type: DataTypes.INTEGER, allowNull: false

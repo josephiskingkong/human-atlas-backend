@@ -1,8 +1,8 @@
 const app = require("../../config/express");
 const { colorText, logger } = require("../../config/logger");
 const { PointModel } = require("../../db/models/PointModel");
-const authRequest = require("../../middlewares/auth");
 const { requireBodyFields } = require("../../middlewares/fields");
+const { authenticateToken } = require("../users/auth");
 
 /**
  * Эндпоинт для добавления новой точки
@@ -22,7 +22,7 @@ const { requireBodyFields } = require("../../middlewares/fields");
  * @returns {Object} - JSON объект с сообщением об успешном добавлении и ID новой точки
  */
 
-app.post("/v1/points/add", authRequest, requireBodyFields(['x', 'y', 'organid', 'name', 'description']), async (req, res) => {
+app.post("/v1/points/add", authenticateToken, requireBodyFields(['x', 'y', 'organid', 'name', 'description']), async (req, res) => {
     try {
         const { x, y, organid, name, description } = req.body;
 
