@@ -8,6 +8,12 @@ const csrf = require('csurf');
 const app = express();
 const port = process.env.API_PORT;
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    next();
+});
+
 app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true,
@@ -21,11 +27,6 @@ app.options('*', (req, res) => {
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-XSRF-TOKEN');
     res.header('Access-Control-Allow-Credentials', 'true');
     res.sendStatus(204);
-});
-
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Credentials', 'true');
-    next();
 });
 
 app.use(bodyParser.json());
