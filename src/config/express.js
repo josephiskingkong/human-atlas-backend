@@ -15,6 +15,10 @@ app.use(cors({
 
 app.use(cookieParser());
 
+app.use(bodyParser.json({ limit: '4096mb' }));
+app.use(bodyParser.urlencoded({ limit: '4096mb', extended: true }));
+app.use(cookieParser());
+
 const csrfProtection = csrf({
     cookie: {
         httpOnly: true,
@@ -22,20 +26,8 @@ const csrfProtection = csrf({
         sameSite: 'None',
     },
 });
+
 app.use(csrfProtection);
-
-app.use((req, res, next) => {
-    if (req.path === '/v1/organs/add') {
-        next();
-    } else {
-        express.json({ limit: '4096mb' })(req, res, next);
-    }
-});
-
-app.use((req, res, next) => {
-    logger.info(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
-    next();
-});
 
 app.use((err, req, res, next) => {
     if (err.code === 'EBADCSRFTOKEN') {
