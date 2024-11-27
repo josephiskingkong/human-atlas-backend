@@ -2,6 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const transliterate = require('transliteration').slugify;
 const fs = require('fs');
+const rawBody = require('raw-body');
 const { spawn } = require('child_process');
 const { OrganModel } = require('../../db/models/OrganModel');
 const app = require('../../config/express');
@@ -19,6 +20,19 @@ const upload = multer({
             cb(new Error('Only .svs files are allowed'), false);
         }
     }
+});
+
+app.use("/v1/organs/add", (req, res, next) => {
+    rawBody(req, {
+        length: req.headers['content-length'],
+        limit: '4gb',
+    }, (err, string) => {
+        if (err) {
+            return next(err);
+        }
+        req.body = {};
+        next();
+    });
 });
 
 /**
