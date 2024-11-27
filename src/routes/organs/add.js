@@ -46,7 +46,7 @@ app.post(
     upload.single('file'), 
     async (req, res) => {
       try {
-        console.log(req)
+        console.log(req.body)
         const { name, categoryid } = req.body; 
         const file = req.file;
   
