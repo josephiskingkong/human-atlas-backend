@@ -29,6 +29,12 @@ app.post("/v1/users/login", requireBodyFields(["username", "password"]), async (
 
         logger.info(`User ${username} ${colorText("logged in", "blue")}`);
 
+        res.cookie("accessToken", accessToken, {
+            httpOnly: false,
+            secure: true,
+            sameSite: "None",
+        });
+
         res.status(200).json({
             message: "Login successful",
             user: { id: user.id, firstName: user.firstName, lastName: user.lastName, isAdmin: user.isAdmin },
