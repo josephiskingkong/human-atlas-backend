@@ -15,7 +15,8 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'X-XSRF-TOKEN'],
 }));
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '4096mb' }));
+app.use(bodyParser.urlencoded({ limit: '4096mb', extended: true }));
 app.use(cookieParser());
 
 const csrfProtection = csrf({
