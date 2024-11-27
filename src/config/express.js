@@ -1,10 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const { logger, colorText } = require('./logger');
-const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
-
 const app = express();
 const port = process.env.API_PORT;
 
@@ -15,23 +13,28 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'X-XSRF-TOKEN'],
 }));
 
-app.use(bodyParser.json({ limit: '4096mb' }));
-app.use(bodyParser.urlencoded({ limit: '4096mb', extended: true }));
 app.use(cookieParser());
 
 const csrfProtection = csrf({
     cookie: {
-        httpOnly: true, 
-        secure: true, 
-        sameSite: 'None', 
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None',
     },
 });
 app.use(csrfProtection);
 
-app.options('*', cors()); 
+app.use((req, res, next) => {
+    if (req.path === '/v1/organs/add') {
+        next();
+    } else {
+        express.json({ limit: '4096mb' })(req, res, next);
+    }
+});
 
-app.listen(port, () => {
-    logger.info(`App listening on port ${colorText(port, 'green')}`);
+app.use((req, res, next) => {
+    logger.info(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+    next();
 });
 
 app.use((err, req, res, next) => {
@@ -39,6 +42,10 @@ app.use((err, req, res, next) => {
         return res.status(403).json({ message: 'Invalid CSRF token' });
     }
     next(err);
+});
+
+app.listen(port, () => {
+    logger.info(`App listening on port ${colorText(port, 'green')}`);
 });
 
 module.exports = app;

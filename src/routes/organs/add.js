@@ -22,19 +22,6 @@ const upload = multer({
     }
 });
 
-app.use("/v1/organs/add", (req, res, next) => {
-    rawBody(req, {
-        length: req.headers['content-length'],
-        limit: '4gb',
-    }, (err, string) => {
-        if (err) {
-            return next(err);
-        }
-        req.body = {};
-        next();
-    });
-});
-
 /**
  * Эндпоинт для добавления нового органа с загрузкой .svs файла и дальнейшей нарезкой на тайлы
  * 
