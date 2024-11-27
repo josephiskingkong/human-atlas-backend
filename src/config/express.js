@@ -30,12 +30,6 @@ app.use(csrfProtection);
 
 app.options('*', cors()); 
 
-app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
-    console.log('Headers:', req.headers);
-    next();
-});
-
 app.listen(port, () => {
     logger.info(`App listening on port ${colorText(port, 'green')}`);
 });

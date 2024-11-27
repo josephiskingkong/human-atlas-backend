@@ -1,4 +1,5 @@
 const app = require("../../config/express");
+const { logger } = require("../../config/logger");
 const { UserModel } = require("../../db/models/UserModel");
 const { authenticateToken } = require("./auth");
 
@@ -23,7 +24,7 @@ app.get('/v1/users/me', authenticateToken, async (req, res) => {
             user,
         });
     } catch (error) {
-        console.error("Error fetching profile:", error);
+        logger.error("Error fetching profile:", error);
         res.status(500).json({
             error: "INTERNAL_SERVER_ERROR",
             error_message: "An error occurred while fetching the profile",

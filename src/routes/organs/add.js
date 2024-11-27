@@ -40,62 +40,54 @@ const upload = multer({
  * @returns {Object} - JSON объект с сообщением об успешном добавлении и ID нового органа
  */
 
-app.post("/v1/organs/add", authenticateToken, (req, res) => {
-    upload.single('file')(req, res, async (err) => {
-        if (err) {
-            logger.error(`Upload error: ${colorText(err.message, 'red')}`);
-            const status = err.message === 'Only .svs files are allowed' ? 415 : 400;
-            return res.status(status).send({ error: err.message });
+app.post("/v1/organs/add", authenticateToken, upload.single('file'), async (req, res) => {
+    try {
+        const { name, categoryid } = req.body;
+        const file = req.file;
+
+        if (!name || !categoryid || !file) {
+            logger.warn("Missing required fields: name, categoryid, or file");
+            return res.status(400).send({ error: "Missing required fields: name, categoryid, or file" });
         }
 
-        try {
-            const { name, categoryid } = req.body;
-            const file = req.file;
+        const synonym = transliterate(name, { lowercase: true, separator: '_' }).replace(/[^a-z0-9_]/g, '');
+        const targetDir = path.join(__dirname, '../../public/organs');
+        const targetPath = path.join(targetDir, `${synonym}.svs`);
+        fs.mkdirSync(targetDir, { recursive: true });
+        fs.renameSync(file.path, targetPath);
 
-            if (!name || !categoryid || !file) {
-                logger.warn("Missing required fields: name, categoryid, or file");
-                return res.status(400).send({ error: "Missing required fields: name, categoryid, or file" });
+        const organ = await OrganModel.create({ name, categoryid, synonym, status: 'PROCESSING' });
+
+        res.status(201).json({ message: "success", organ_id: organ.id, name: organ.name, status: organ.status });
+
+        (async () => {
+            try {
+                logger.info(`Organ ${colorText('processing', 'yellow')}: ID=${organ.id}, name="${name}"`);
+                const metadata = await getSvsMetadata(targetPath);
+
+                await OrganModel.update(
+                    { mpp_x: metadata.mppX, mpp_y: metadata.mppY, width: metadata.width, height: metadata.height },
+                    { where: { id: organ.id } }
+                );
+
+                const organTilesDir = `/var/www/human-atlas-tiles/tiles/${organ.id}`;
+                fs.mkdirSync(organTilesDir, { recursive: true });
+
+                await convertSvsToTiles(targetPath, `${organTilesDir}/${organ.id}`);
+
+                await OrganModel.update({ status: 'DONE' }, { where: { id: organ.id } });
+
+                fs.unlink(targetPath, (err) => {
+                    if (err) logger.warn(`Failed to delete the file: ${targetPath}`);
+                });
+                logger.info(`Organ ${colorText('processed', 'green')}: ID=${organ.id}, name="${name}"`);
+            } catch (error) {
+                logger.error(`Error processing organ ID=${organ.id}: ${colorText(error.message, 'red')}`);
+                await OrganModel.update({ status: 'ERROR' }, { where: { id: organ.id } });
             }
-
-            const synonym = transliterate(name, { lowercase: true, separator: '_' }).replace(/[^a-z0-9_]/g, '');
-            const targetDir = path.join(__dirname, '../../public/organs');
-            const targetPath = path.join(targetDir, `${synonym}.svs`);
-            fs.mkdirSync(targetDir, { recursive: true });
-            fs.renameSync(file.path, targetPath);
-
-            const organ = await OrganModel.create({ name, categoryid, synonym, status: 'PROCESSING' });
-
-            res.status(201).json({ message: "success", organ_id: organ.id, name: organ.name, status: organ.status });
-
-            (async () => {
-                try {
-                    logger.info(`Organ ${colorText('processing', 'yellow')}: ID=${organ.id}, name="${name}"`);
-                    const metadata = await getSvsMetadata(targetPath);
-
-                    await OrganModel.update(
-                        { mpp_x: metadata.mppX, mpp_y: metadata.mppY, width: metadata.width, height: metadata.height },
-                        { where: { id: organ.id } }
-                    );
-
-                    const organTilesDir = `/var/www/human-atlas-tiles/tiles/${organ.id}`;
-                    fs.mkdirSync(organTilesDir, { recursive: true });
-
-                    await convertSvsToTiles(targetPath, `${organTilesDir}/${organ.id}`);
-
-                    await OrganModel.update({ status: 'DONE' }, { where: { id: organ.id } });
-
-                    fs.unlink(targetPath, (err) => {
-                        if (err) logger.warn(`Failed to delete the file: ${targetPath}`);
-                    });
-                    logger.info(`Organ ${colorText('processed', 'green')}: ID=${organ.id}, name="${name}"`);
-                } catch (error) {
-                    logger.error(`Error processing organ ID=${organ.id}: ${colorText(error.message, 'red')}`);
-                    await OrganModel.update({ status: 'ERROR' }, { where: { id: organ.id } });
-                }
-            })();
-        } catch (e) {
-            logger.error(`Server error: ${colorText(e.message, 'red')}`);
-            return res.status(500).send({ error: "An internal server error occurred" });
-        }
-    });
+        })();
+    } catch (e) {
+        logger.error(`Server error: ${colorText(e.message, 'red')}`);
+        return res.status(500).send({ error: "An internal server error occurred" });
+    }
 });
