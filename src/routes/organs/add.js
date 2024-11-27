@@ -42,12 +42,11 @@ const upload = multer({
 
 app.post(
     "/v1/organs/add",
-    authenticateToken,
-    express.json({ limit: '4096mb' }),
-    upload.single('file'),
+    authenticateToken, 
+    upload.single('file'), 
     async (req, res) => {
       try {
-        const { name, categoryid } = req.body;
+        const { name, categoryid } = req.body; 
         const file = req.file;
   
         if (!name || !categoryid || !file) {
