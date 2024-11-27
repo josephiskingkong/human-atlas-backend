@@ -14,6 +14,11 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'X-XSRF-TOKEN'],
 }));
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    next();
+});
+
 app.use(cookieParser());
 
 app.use(bodyParser.json({ limit: '50mb' }));
