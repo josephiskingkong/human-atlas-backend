@@ -11,6 +11,7 @@ const { authenticateToken } = require('../users/auth');
 
 const upload = multer({
     dest: '../../public/organs', 
+    limits: { fileSize: 4 * 1024 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         if (path.extname(file.originalname).toLowerCase() === '.svs') {
             cb(null, true);
