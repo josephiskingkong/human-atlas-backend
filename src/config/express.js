@@ -3,6 +3,7 @@ const cors = require('cors');
 const { logger, colorText } = require('./logger');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
+const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.API_PORT;
 
