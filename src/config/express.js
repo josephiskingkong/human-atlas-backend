@@ -11,7 +11,17 @@ app.use(cors({
     origin: ['http://localhost:3000', 'https://josephiskingkong.github.io'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: '*',
+    allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'X-XSRF-TOKEN',
+        'XSRF-TOKEN',
+        'X-Custom-Header',
+        'Accept',
+        'Origin',
+        'User-Agent',
+        'Access-Control-Allow-Headers'
+    ],
 }));
 
 app.use((req, res, next) => {
