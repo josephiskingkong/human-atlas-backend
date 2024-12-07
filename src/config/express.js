@@ -25,15 +25,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 
-const csrfProtection = csrf({
-    cookie: {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'None',
-        domain: '.humanatlas.top',
-        maxAge: 3600
-    },
-});
+const csrfProtection = csrf({});
 
 app.use(csrfProtection);
 
