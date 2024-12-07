@@ -30,7 +30,7 @@ const csrfProtection = csrf({
         httpOnly: true,
         secure: true,
         sameSite: 'None',
-        domain: 'api.humanatlas.top',
+        domain: '.humanatlas.top',
         maxAge: 3600
     },
 });
