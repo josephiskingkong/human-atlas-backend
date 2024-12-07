@@ -38,7 +38,7 @@ app.use(cookieParser());
 const csrfProtection = csrf({
     value: (req) => {
        
-        return req.headers['xsrf-token'];
+        return req.headers['Xsrf-token'];
     },
 });
 app.use(csrfProtection);
