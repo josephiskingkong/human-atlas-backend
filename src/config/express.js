@@ -36,13 +36,11 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 
 const csrfProtection = csrf({
-    cookie: {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'None',
+    value: (req) => {
+       
+        return req.headers['xsrf-token'];
     },
 });
-
 app.use(csrfProtection);
 
 app.use((err, req, res, next) => {
