@@ -11,7 +11,7 @@ app.use(cors({
     origin: ['http://localhost:3000', 'https://josephiskingkong.github.io'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-TOKEN'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-XSRF-TOKEN'],
 }));
 
 app.use((req, res, next) => {
@@ -23,8 +23,15 @@ app.use(cookieParser());
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(cookieParser());
 
-const csrfProtection = csrf({ cookie: false });
+const csrfProtection = csrf({
+    cookie: {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None',
+    },
+});
 
 app.use(csrfProtection);
 
