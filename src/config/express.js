@@ -46,9 +46,9 @@ const csrfProtection = csrf({
 app.use(csrfProtection);
 
 app.all('*', function (req, res) {
-    res.cookie('XSRF-TOKEN', req.csrfToken())
-    res.render('index')
-})
+    res.cookie('XSRF-TOKEN', req.csrfToken());
+    res.json({ message: 'CSRF token set' });
+});
 
 app.use((err, req, res, next) => {
     if (err.code === 'EBADCSRFTOKEN') {
