@@ -20,7 +20,7 @@ const logger = winston.createLogger({
     level: "silly",
     format: winston.format.combine(
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        winston.format.errors({ stack: true }), // Добавляем стек для ошибок
+        winston.format.errors({ stack: true }), 
         winston.format.printf(({ timestamp, level, message, stack }) => {
             return stack
                 ? `${timestamp} [${level.toUpperCase()}]: ${message}\nStack trace: ${stack}`
@@ -42,7 +42,7 @@ const logger = winston.createLogger({
         }),
         new winston.transports.File({
             filename: 'logs.log',
-            level: 'info', // Логи уровня info и выше (но исключая error)
+            level: 'info', 
             format: winston.format.combine(
                 winston.format.uncolorize(),
                 winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
@@ -53,7 +53,7 @@ const logger = winston.createLogger({
         }),
         new winston.transports.File({
             filename: 'errors.log',
-            level: 'error', // Логи уровня error
+            level: 'error', 
             format: winston.format.combine(
                 winston.format.uncolorize(),
                 winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
