@@ -24,9 +24,14 @@ app.use(cookieParser());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
-const csrfProtection = csrf();
+const csrfProtection = csrf({ cookie: false });
 
 app.use(csrfProtection);
+
+app.all('*', function (req, res) {
+    res.cookie('XSRF-TOKEN', req.csrfToken())
+    res.render('index')
+})
 
 app.use((err, req, res, next) => {
     if (err.code === 'EBADCSRFTOKEN') {
