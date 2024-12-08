@@ -69,12 +69,6 @@ app.post('/v1/users/register', requireBodyFields(['username', 'password', 'name'
 
         const accessToken = generateAccessToken(user);
 
-        res.cookie("accessToken", accessToken, {
-            httpOnly: false,
-            secure: true,
-            sameSite: "None",
-        });
-
         res.status(201).json({
             message: 'User created',
             user: { id: user.id, firstName: user.firstName, lastName: user.lastName, isAdmin: user.isAdmin },
