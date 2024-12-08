@@ -4,9 +4,15 @@ const { logger } = require('../../config/logger');
 
 const authenticateToken = async (req, res, next) => {
     try {
-        const token = req.cookies.accessToken; 
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            logger.error("No Authorization header or Bearer token found");
+            return res.status(401).json({ error: 'UNAUTHORIZED' });
+        }
+
+        const token = authHeader.split(' ')[1];
         if (!token) {
-            logger.error("No token found in cookies");
+            logger.error("Token is missing in the Authorization header");
             return res.status(401).json({ error: 'UNAUTHORIZED' });
         }
 
