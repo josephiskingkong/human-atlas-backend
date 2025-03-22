@@ -32,8 +32,8 @@ app.use((req, res, next) => {
 
 app.use(cookieParser());
 
-app.use(bodyParser.json({ limit: '1024mb' }));
-app.use(bodyParser.urlencoded({ limit: '1024mb', extended: true }));
+app.use(bodyParser.json({ limit: '256mb' }));
+app.use(bodyParser.urlencoded({ limit: '256mb', extended: true }));
 app.use(cookieParser());
 
 // const csrfProtection = csrf({
