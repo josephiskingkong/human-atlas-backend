@@ -75,6 +75,7 @@ app.post('/v1/users/register', requireBodyFields(['username', 'password', 'name'
             accessToken
         });
     } catch (e) {
+        console.log(e)
         res.status(500).json({
             error: "INTERNAL_SERVER_ERROR",
             error_message: e.message
