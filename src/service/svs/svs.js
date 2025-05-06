@@ -1,32 +1,35 @@
 const spawnPromise = require("./spawnPromise");
+const { logger } = require("../../config/logger");
 
 async function getSvsMetadata(inputFile) {
     const command = 'vipsheader';
-    const args = ['-a', inputFile];
+
+    async function getField(field) {
+        try {
+            // Вызываем spawnPromise без опции ignoreStdout, так как нам нужен вывод
+            const output = await spawnPromise(command, ['-f', field, inputFile]);
+            return output.trim();
+        } catch (error) {
+            logger.warn(`Could not retrieve field ${field} for ${inputFile}: ${error.message}`);
+            return null;
+        }
+    }
 
     try {
-        const output = await spawnPromise(command, args);
+        const mppXStr = await getField('openslide.mpp-x');
+        const mppYStr = await getField('openslide.mpp-y');
+        const widthStr = await getField('width');
+        const heightStr = await getField('height');
 
-        const mppXMatch = output.match(/openslide\.mpp-x:\s*([\d.]+)/);
-        const mppYMatch = output.match(/openslide\.mpp-y:\s*([\d.]+)/);
-        const mppX = mppXMatch ? parseFloat(mppXMatch[1]) : null;
-        const mppY = mppYMatch ? parseFloat(mppYMatch[1]) : null;
+        const mppX = mppXStr ? parseFloat(mppXStr) : null;
+        const mppY = mppYStr ? parseFloat(mppYStr) : null;
+        const width = widthStr ? parseInt(widthStr, 10) : null;
+        const height = heightStr ? parseInt(heightStr, 10) : null;
         
-        const widthMatch = output.match(/width:\s*(\d+)/);
-        const heightMatch = output.match(/height:\s*(\d+)/);
-        const width = widthMatch ? parseInt(widthMatch[1], 10) : null;
-        const height = heightMatch ? parseInt(heightMatch[1], 10) : null;
-
-        return { mppX, mppY, width, height, rawOutput: output };
+        return { mppX, mppY, width, height };
     } catch (error) {
-        throw new Error(`Error extracting metadata: ${error}`);
+        throw new Error(`Error extracting metadata for ${inputFile}: ${error}`);
     }
 }
 
-async function convertSvsToTiles(inputFile, outputDir) {
-    const command = 'vips';
-    const args = ['dzsave', inputFile, outputDir, '--suffix', '.webp', '--tile-size', '512', '--overlap', '0'];
-    await spawnPromise(command, args);
-}
-
-module.exports = { getSvsMetadata, convertSvsToTiles }
+module.exports = { getSvsMetadata };
