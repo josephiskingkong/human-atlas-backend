@@ -9,30 +9,52 @@ const { TestResultModel } = require("./models/TestResultModel");
 const { TestSessionModel } = require("./models/TestSessionModel");
 const { UserAnswerModel } = require("./models/UserAnswerModel");
 
-// Связи для TestSessionModel
-TestSessionModel.belongsTo(TestModel, { foreignKey: 'testId' });
-TestModel.hasMany(TestSessionModel, { foreignKey: 'testId' });
+// Функция для настройки ассоциаций между моделями
+function setupAssociations() {
+    // Связь Category с Test - явно указываем имена полей
+    CategoryModel.hasMany(TestModel, { foreignKey: 'categoryId', as: 'tests' });
+    TestModel.belongsTo(CategoryModel, { foreignKey: 'categoryId', as: 'category' });
 
-TestSessionModel.belongsTo(UserModel, { foreignKey: 'userId' });
-UserModel.hasMany(TestSessionModel, { foreignKey: 'userId' });
+    // Связи для TestModel и QuestionModel
+    TestModel.hasMany(QuestionModel, { foreignKey: 'testId', onDelete: 'CASCADE' });
+    QuestionModel.belongsTo(TestModel, { foreignKey: 'testId' });
 
-// Связи для UserAnswerModel
-UserAnswerModel.belongsTo(TestSessionModel, { foreignKey: 'sessionId' });
-TestSessionModel.hasMany(UserAnswerModel, { foreignKey: 'sessionId' });
+    // Связи для QuestionModel и AnswerModel
+    QuestionModel.hasMany(AnswerModel, { foreignKey: 'questionId', onDelete: 'CASCADE' });
+    AnswerModel.belongsTo(QuestionModel, { foreignKey: 'questionId' });
 
-UserAnswerModel.belongsTo(QuestionModel, { foreignKey: 'questionId' });
-QuestionModel.hasMany(UserAnswerModel, { foreignKey: 'questionId' });
+    // Связи для TestResultModel
+    TestModel.hasMany(TestResultModel, { foreignKey: 'testId' });
+    TestResultModel.belongsTo(TestModel, { foreignKey: 'testId' });
 
-// Связь Category с Test
-CategoryModel.hasMany(TestModel, { foreignKey: 'categoryId' });
-TestModel.belongsTo(CategoryModel, { foreignKey: 'categoryId', as: 'category' });
+    UserModel.hasMany(TestResultModel, { foreignKey: 'userId' });
+    TestResultModel.belongsTo(UserModel, { foreignKey: 'userId' });
+
+    // Связи для TestSessionModel
+    TestSessionModel.belongsTo(TestModel, { foreignKey: 'testId' });
+    TestModel.hasMany(TestSessionModel, { foreignKey: 'testId' });
+
+    TestSessionModel.belongsTo(UserModel, { foreignKey: 'userId' });
+    UserModel.hasMany(TestSessionModel, { foreignKey: 'userId' });
+
+    // Связи для UserAnswerModel
+    UserAnswerModel.belongsTo(TestSessionModel, { foreignKey: 'sessionId' });
+    TestSessionModel.hasMany(UserAnswerModel, { foreignKey: 'sessionId' });
+
+    UserAnswerModel.belongsTo(QuestionModel, { foreignKey: 'questionId' });
+    QuestionModel.hasMany(UserAnswerModel, { foreignKey: 'questionId' });
+}
 
 // Синхронизация моделей с базой данных
 async function init() {
     try {
-        await PointModel.sync({ alter: true });
-        await OrganModel.sync({ alter: true });
+        // Устанавливаем ассоциации до синхронизации
+        setupAssociations();
+        
+        // Синхронизируем модели
         await CategoryModel.sync({ alter: true });
+        await OrganModel.sync({ alter: true });
+        await PointModel.sync({ alter: true });
         await UserModel.sync({ alter: true });
         
         // Новые модели для тестирования
@@ -53,4 +75,4 @@ if (require.main === module) {
     init();
 }
 
-module.exports = { init };
+module.exports = { init, setupAssociations };
