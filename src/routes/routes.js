@@ -18,3 +18,9 @@ require('./users/register');
 require('./users/csrf');
 require('./users/login');
 require('./users/profile');
+
+// TESTS:
+require('./tests/add');
+require('./tests/get');
+require('./tests/start');
+require('./tests/submit');
