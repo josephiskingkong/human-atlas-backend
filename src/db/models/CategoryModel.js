@@ -8,7 +8,7 @@ const CategoryModel = db.define('categories', {
     name: {
         type: DataTypes.STRING, allowNull: false
     },
-    categoryid: {
+    categoryId: {
         type: DataTypes.INTEGER, allowNull: true
     }
 })

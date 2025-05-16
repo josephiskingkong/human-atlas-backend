@@ -15,7 +15,7 @@ const { requireParamFields } = require("../../middlewares/fields");
 
 app.get("/v1/categories/get-mains/", async (req, res) => {
     try {
-        const categories = await CategoryModel.findAll({ where: { categoryid: null } })
+        const categories = await CategoryModel.findAll({ where: { categoryId: null } })
 
         if (categories.length === 0) {
             return res.status(404).send({ error: "Categories not found" })
@@ -49,9 +49,9 @@ app.get("/v1/categories/get-mains/", async (req, res) => {
 
 app.get("/v1/categories/get-by-categoryid/:categoryid", requireParamFields(['categoryid']), async (req, res) => {
     try {
-        const { categoryid } = req.params;
+        const { categoryId } = req.params;
 
-        const categories = await CategoryModel.findAll({ where: { categoryid }, order: [['id', 'ASC']] });
+        const categories = await CategoryModel.findAll({ where: { categoryId }, order: [['id', 'ASC']] });
 
         if (categories.length === 0) {
             return res.status(200).send([]);
@@ -60,7 +60,7 @@ app.get("/v1/categories/get-by-categoryid/:categoryid", requireParamFields(['cat
         return res.status(200).json(categories.map(category => ({
             id: category.id,
             name: category.name,
-            categoryid: category.categoryid
+            categoryId: category.categoryId
         })));
     } catch (e) {
         logger.error(`Error while getting categories by category id: ${colorText(e.message, 'red')}`)
@@ -93,7 +93,7 @@ app.get("/v1/categories/get/:id", requireParamFields(['id']), async (req, res) =
         return res.status(200).json({
             id: category.id,
             name: category.name,
-            categoryid: category.categoryid
+            categoryId: category.categoryId
         });
     } catch (e) {
         logger.error(`Error while getting categories by category id: ${colorText(e.message, 'red')}`)
