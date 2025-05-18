@@ -8,7 +8,7 @@ const app = express();
 const port = process.env.API_PORT;
 
 app.use(cors({
-    origin: ['http://localhost:3000', 'https://josephiskingkong.github.io'],
+    origin: ['http://localhost:3000', 'https://josephiskingkong.github.io', 'https://humanatlas.top'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
