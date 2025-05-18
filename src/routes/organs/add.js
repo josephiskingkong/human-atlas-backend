@@ -10,22 +10,20 @@ const cors = require('cors');
 const { Worker } = require('worker_threads');
 const fs = require('fs').promises;
 
-// Настройка multer - добавляем это определение
 const upload = multer({
     dest: path.join(__dirname, '../../public/organs/temp'),
     limits: {
         fileSize: 4 * 1024 * 1024 * 1024 // 4GB
     },
     fileFilter: (req, file, cb) => {
-        if (file.mimetype === 'image/openslide' || path.extname(file.originalname).toLowerCase() === '.svs') {
+        if (file.mimetype === 'image/openslide' || ['.png', '.jpeg', '.jpg', '.svs'].includes(path.extname(file.originalname).toLowerCase())) {
             cb(null, true);
         } else {
-            cb(new Error('Only .svs files are allowed'));
+            cb(new Error('Only .svs, .png, .jpeg, .jpg files are allowed'));
         }
     }
 });
 
-// Очередь обработки
 const processingQueue = [];
 let isProcessing = false;
 
@@ -167,7 +165,6 @@ app.post("/v1/organs/add", cors(), authRequest, (req, res) => {
 
             res.status(201).json({ message: "success", organ_id: organ.id });
 
-            // Добавляем в очередь обработки
             processingQueue.push({ organ, name, targetPath });
             processNextInQueue();
         } catch (e) {
