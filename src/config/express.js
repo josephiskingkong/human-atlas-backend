@@ -16,7 +16,7 @@ const corsOptions = {
         'Content-Type',
         'Authorization',
         'X-CSRF-TOKEN',
-        'x-csrf-token',
+        'csrf-token',
         'XSRF-TOKEN',
         'X-Custom-Header',
         'Accept',
