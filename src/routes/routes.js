@@ -13,6 +13,7 @@ require("./organs/delete");
 require("./categories/add");
 require("./categories/get");
 require("./categories/delete");
+require("./categories/edit");
 
 // USERS:
 require("./users/register");
