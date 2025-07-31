@@ -5,98 +5,125 @@ const { requireParamFields } = require("../../middlewares/fields");
 
 /**
  * Эндпоинт для получения списка главных категорий
- * 
+ *
  * @route POST /v1/categories/get-mains/
- * 
+ *
  * @param {Object} res - Объект ответа
- * 
+ *
  * @returns {Object} - Массив JSON объектов с данными о категориях
  */
 
 app.get("/v1/categories/get-mains/", async (req, res) => {
-    try {
-        const categories = await CategoryModel.findAll({ where: { categoryId: null } })
+  try {
+    const categories = await CategoryModel.findAll({
+      where: { categoryId: null },
+    });
 
-        if (categories.length === 0) {
-            return res.status(404).send({ error: "Categories not found" })
-        }
-
-        return res.status(200).json(
-            categories.map(category => ({
-                id: category.id,
-                name: category.name,
-            }))
-        )
-    } catch (e) {
-        logger.error(`Error while getting categories: ${colorText(e.message, 'red')}`)
-        res.status(500).send({ error: e.message });
+    if (categories.length === 0) {
+      return res.status(404).send({ error: "Categories not found" });
     }
+
+    return res.status(200).json(
+      categories.map((category) => ({
+        id: category.id,
+        name: category.name,
+      }))
+    );
+  } catch (e) {
+    logger.error(
+      `Error while getting categories: ${colorText(e.message, "red")}`
+    );
+    res.status(500).send({ error: e.message });
+  }
 });
 
 /**
  * Эндпоинт для получения всех точек по ID органа
- * 
+ *
  * @route POST /v1/points/get-by-organid
  * @middleware authRequest - Авторизационный мидлвэйр
  * @middleware requireFields(['organid']) - Мидлвэйр для проверки обязательных полей
- * 
+ *
  * @param {number} req.body.organid - ID органа, для которого необходимо получить точки
- * 
+ *
  * @param {Object} res - Объект ответа
- * 
+ *
  * @returns {Object} - JSON массив объектов с данными точек
  */
 
-app.get("/v1/categories/get-by-categoryid/:categoryid", requireParamFields(['categoryid']), async (req, res) => {
+app.get(
+  "/v1/categories/get-by-categoryid/:categoryid",
+  requireParamFields(["categoryid"]),
+  async (req, res) => {
     try {
-        const { categoryId } = req.params;
+      const { categoryid } = req.params;
 
-        const categories = await CategoryModel.findAll({ where: { categoryId }, order: [['id', 'ASC']] });
+      const categories = await CategoryModel.findAll({
+        where: { categoryId: categoryid },
+        order: [["id", "ASC"]],
+      });
 
-        if (categories.length === 0) {
-            return res.status(200).send([]);
-        }
+      if (categories.length === 0) {
+        return res.status(200).send([]);
+      }
 
-        return res.status(200).json(categories.map(category => ({
-            id: category.id,
-            name: category.name,
-            categoryId: category.categoryId
-        })));
+      return res.status(200).json(
+        categories.map((category) => ({
+          id: category.id,
+          name: category.name,
+          categoryId: category.categoryId,
+        }))
+      );
     } catch (e) {
-        logger.error(`Error while getting categories by category id: ${colorText(e.message, 'red')}`)
-        res.status(500).send({ error: e.message });
+      logger.error(
+        `Error while getting categories by category id: ${colorText(
+          e.message,
+          "red"
+        )}`
+      );
+      res.status(500).send({ error: e.message });
     }
-});
+  }
+);
 
 /**
  * Эндпоинт для получения информации о категории по её ID
- * 
+ *
  * @route POST /v1/categories/get/:id
- * 
+ *
  * @param {Object} id - ID категории
- * 
+ *
  * @param {Object} res - Объект ответа
- * 
+ *
  * @returns {Object} - JSON объект с данными о категории
  */
 
-app.get("/v1/categories/get/:id", requireParamFields(['id']), async (req, res) => {
+app.get(
+  "/v1/categories/get/:id",
+  requireParamFields(["id"]),
+  async (req, res) => {
     try {
-        const { id } = req.params;
+      const { id } = req.params;
 
-        const category = await CategoryModel.findOne({ where: { id } });
+      const category = await CategoryModel.findOne({ where: { id } });
 
-        if (!category) {
-            return res.status(404).send("Category not found");
-        }
+      if (!category) {
+        return res.status(404).send("Category not found");
+      }
 
-        return res.status(200).json({
-            id: category.id,
-            name: category.name,
-            categoryId: category.categoryId
-        });
+      return res.status(200).json({
+        id: category.id,
+        name: category.name,
+        categoryId: category.categoryId,
+      });
     } catch (e) {
-        logger.error(`Error while getting categories by category id: ${colorText(e.message, 'red')}`)
-        res.status(500).send({ error: e.message });
+      logger.error(
+        `Error while getting categories by category id: ${colorText(
+          e.message,
+          "red"
+        )}`
+      );
+      res.status(500).send({ error: e.message });
     }
-});
+  }
+);
