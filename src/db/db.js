@@ -4,8 +4,10 @@ require("dotenv").config();
 const requiredEnvVars = ["tableName", "dbLogin", "dbPass", "dbHost", "dbPort"];
 
 for (const envVar of requiredEnvVars) {
-  if (!process.env[envVar]) {
-    throw new Error(`Missing required environment variable: ${envVar}`);
+  if (!process.env[envVar] || process.env[envVar].trim() === "") {
+    throw new Error(
+      `Missing or empty required environment variable: ${envVar}`
+    );
   }
 }
 
