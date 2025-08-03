@@ -20,7 +20,7 @@ const { requireBodyFields } = require("../../middlewares/fields");
  * @returns {Object} - JSON объект с сообщением об успешном редактировании и ID обновлённой категории
  */
 
-app.post(
+app.put(
   "/v1/tests/edit",
   authRequest,
   requireBodyFields(["id", "title", "categoryId", "duration"]),
