@@ -21,12 +21,11 @@ const { requireBodyFields } = require("../../middlewares/fields");
  */
 
 app.post(
-  "/v1/categories/edit",
+  "/v1/tests/edit",
   authRequest,
-  requireBodyFields(["id", "name"]),
+  requireBodyFields(["id", "title", "categoryId", "duration"]),
   async (req, res) => {
-    const { id } = req.params;
-    const { title, categoryId, duration } = req.body;
+    const { id, title, categoryId, duration } = req.body;
 
     if (!title || !categoryId || !duration) {
       return res.status(400).json({ message: "Заполните все поля" });
