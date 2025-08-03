@@ -7,6 +7,7 @@ require("./points/edit");
 // ORGANS:
 require("./organs/add");
 require("./organs/get");
+require("./organs/edit");
 require("./organs/delete");
 
 // CATEGORIES:
@@ -23,6 +24,8 @@ require("./users/profile");
 
 // TESTS:
 require("./tests/add");
+require("./tests/edit");
+require("./tests/delete");
 require("./tests/get");
 require("./tests/start");
 require("./tests/submit");
