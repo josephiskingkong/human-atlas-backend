@@ -3,6 +3,7 @@ const { colorText, logger } = require("../../config/logger");
 const { CategoryModel } = require("../../db/models/CategoryModel");
 const authRequest = require("../../middlewares/auth");
 const { requireBodyFields } = require("../../middlewares/fields");
+const { authenticateToken } = require("../users/auth");
 
 /**
  * Эндпоинт для редактирования существующей категории
@@ -21,7 +22,7 @@ const { requireBodyFields } = require("../../middlewares/fields");
 
 app.post(
   "/v1/categories/edit",
-  authRequest,
+  authenticateToken,
   requireBodyFields(["id", "name"]),
   async (req, res) => {
     try {

@@ -4,6 +4,7 @@ const { OrganModel } = require("../../db/models/OrganModel");
 const { PointModel } = require("../../db/models/PointModel");
 const authRequest = require("../../middlewares/auth");
 const { requireParamFields } = require("../../middlewares/fields");
+const { authenticateToken } = require("../users/auth");
 
 /**
  * Эндпоинт для получения информации о органе по его айди
@@ -110,7 +111,7 @@ app.get(
  * @returns {Object} - JSON массив объектов с данными органов
  */
 
-app.get("/v1/organs/get-all/", authRequest, async (req, res) => {
+app.get("/v1/organs/get-all/", authenticateToken, async (req, res) => {
   try {
     const organs = await OrganModel.findAll();
 

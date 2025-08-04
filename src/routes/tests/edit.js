@@ -4,6 +4,7 @@ const { CategoryModel } = require("../../db/models/CategoryModel");
 const { TestModel } = require("../../db/models/TestModel");
 const authRequest = require("../../middlewares/auth");
 const { requireBodyFields } = require("../../middlewares/fields");
+const { authenticateToken } = require("../users/auth");
 
 /**
  * Эндпоинт для редактирования существующей категории
@@ -22,7 +23,7 @@ const { requireBodyFields } = require("../../middlewares/fields");
 
 app.put(
   "/v1/tests/edit",
-  authRequest,
+  authenticateToken,
   requireBodyFields(["id", "title", "categoryId", "duration"]),
   async (req, res) => {
     const { id, title, categoryId, duration } = req.body;

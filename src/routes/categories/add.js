@@ -1,8 +1,8 @@
 const app = require("../../config/express");
 const { colorText, logger } = require("../../config/logger");
 const { CategoryModel } = require("../../db/models/CategoryModel");
-const authRequest = require("../../middlewares/auth");
 const { requireBodyFields } = require("../../middlewares/fields");
+const { authenticateToken } = require("../users/auth");
 
 /**
  * Эндпоинт для добавления новой категории
@@ -21,7 +21,7 @@ const { requireBodyFields } = require("../../middlewares/fields");
 
 app.post(
   "/v1/categories/add",
-  authRequest,
+  authenticateToken,
   requireBodyFields(["name"]),
   async (req, res) => {
     try {

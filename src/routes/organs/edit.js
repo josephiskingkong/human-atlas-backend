@@ -3,7 +3,7 @@ const { logger } = require("../../config/logger");
 const { OrganModel } = require("../../db/models/OrganModel");
 const { authenticateToken } = require("../users/auth");
 
-app.put("/v1/organs/:id", authenticateToken, async (req, res) => {
+app.put("/v1/organs/edit", authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { name, categoryId } = req.body;
 
