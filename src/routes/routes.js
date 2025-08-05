@@ -17,7 +17,7 @@ require("./categories/delete");
 require("./categories/edit");
 
 // USERS:
-require("./users/register");
+// require("./users/register");
 require("./users/csrf");
 require("./users/login");
 require("./users/profile");
