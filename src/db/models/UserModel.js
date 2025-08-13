@@ -127,7 +127,7 @@ async function createAdmin() {
       const lastName = "Polson";
 
       await UserModel.createSingleton({
-        username,
+        username: adminUsername,
         hashedPassword,
         firstName,
         lastName,
