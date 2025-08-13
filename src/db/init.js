@@ -11,6 +11,17 @@ const { UserAnswerModel } = require("./models/UserAnswerModel");
 
 // Функция для настройки ассоциаций между моделями
 function setupAssociations() {
+  // Связи Сategory и подкатегорий
+  CategoryModel.hasMany(CategoryModel, {
+    foreignKey: "categoryId",
+    as: "subcategories",
+    onDelete: "CASCADE",
+  });
+  CategoryModel.belongsTo(CategoryModel, {
+    foreignKey: "categoryId",
+    as: "parentCategory",
+  });
+
   // Связи CategoryModel и OrganModel
   CategoryModel.hasMany(OrganModel, {
     foreignKey: "categoryid",
