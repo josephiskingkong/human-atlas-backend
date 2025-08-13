@@ -1,7 +1,15 @@
 const { Sequelize } = require("sequelize");
 require("dotenv").config();
 
-const requiredEnvVars = ["tableName", "dbLogin", "dbPass", "dbHost", "dbPort"];
+const requiredEnvVars = [
+  "tableName",
+  "dbLogin",
+  "dbPass",
+  "dbHost",
+  "dbPort",
+  "adminName",
+  "adminPassword",
+];
 
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar] || process.env[envVar].trim() === "") {
