@@ -24,11 +24,11 @@ const { authenticateToken } = require("../users/auth");
 app.put(
   "/v1/tests/edit",
   authenticateToken,
-  requireBodyFields(["id", "title", "categoryId", "duration"]),
+  requireBodyFields(["id", "title", "duration"]),
   async (req, res) => {
-    const { id, title, categoryId, duration } = req.body;
+    const { id, title, duration } = req.body;
 
-    if (!title || !categoryId || !duration) {
+    if (!title || !duration) {
       return res.status(400).json({ message: "Заполните все поля" });
     }
 
@@ -40,7 +40,6 @@ app.put(
       }
 
       test.title = title;
-      test.categoryId = categoryId;
       test.duration = duration;
 
       await test.save();

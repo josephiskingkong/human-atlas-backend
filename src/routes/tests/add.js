@@ -13,17 +13,16 @@ const { db } = require("../../db/db");
 app.post(
   "/v1/tests/add",
   authenticateToken,
-  requireBodyFields(["title", "categoryId", "duration"]),
+  requireBodyFields(["title", "duration"]),
   async (req, res) => {
     const transaction = await db.transaction();
 
     try {
-      const { title, categoryId, duration, description } = req.body;
+      const { title, duration, description } = req.body;
 
       const test = await TestModel.create(
         {
           title,
-          categoryId,
           duration,
           description,
         },
