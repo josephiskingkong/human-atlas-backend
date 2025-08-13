@@ -4,81 +4,83 @@ const { db } = require("../db");
 const { logger } = require("../../config/logger");
 const SALT_ROUNDS = 10;
 
-const UserModel = db.define("users", {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    unique: true,
-    autoIncrement: true,
-  },
-  username: {
-    type: DataTypes.STRING(64),
-    unique: true,
-    allowNull: false,
-  },
-  hashedPassword: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  firstName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  lastName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  photo: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  dateOfBirth: {
-    type: DataTypes.DATEONLY,
-    allowNull: true,
-  },
-  phoneNumber: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    validate: {
-      is: /^[0-9\-\+]{9,15}$/,
+const UserModel = db.define(
+  "users",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      unique: true,
+      autoIncrement: true,
+    },
+    username: {
+      type: DataTypes.STRING(64),
+      unique: true,
+      allowNull: false,
+    },
+    hashedPassword: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    photo: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    dateOfBirth: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+    },
+    phoneNumber: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        is: /^[0-9\-\+]{9,15}$/,
+      },
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
+    },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
+    tokenVersion: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: false,
     },
   },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    unique: true,
-    validate: {
-      isEmail: true,
+  {
+    hooks: {
+      async beforeCreate(user) {
+        const count = await UserModel.count();
+        if (count >= 1) {
+          throw new Error("Можно создать только одного пользователя в системе");
+        }
+      },
+      async beforeBulkCreate(users) {
+        const count = await UserModel.count();
+        if (count > 0 || users.length > 1) {
+          throw new Error("Можно создать только одного пользователя в системе");
+        }
+      },
     },
-  },
-  isAdmin: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: true,
-  },
-  tokenVersion: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-    allowNull: false,
-  },
-  hooks: {
-    async beforeCreate(user) {
-      const count = await UserModel.count();
-
-      if (count >= 1) {
-        throw new Error("Можно создать только одного пользователя в системе");
-      }
-    },
-
-    async beforeBulkCreate(users) {
-      const count = await UserModel.count();
-
-      if (count > 0 || users.length > 1) {
-        throw new Error("Можно создать только одного пользователя в системе");
-      }
-    },
-  },
-});
+  }
+);
 
 UserModel.createSingleton = async function (userData) {
   const existingUser = await this.findOne();
