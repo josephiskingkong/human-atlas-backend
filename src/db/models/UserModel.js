@@ -91,19 +91,6 @@ UserModel.createSingleton = async function (userData) {
   return await this.create(userData);
 };
 
-UserModel.getSingleton = async function () {
-  return await this.findOne();
-};
-
-UserModel.updateSingleton = async function (updateData) {
-  const user = await this.findOne();
-  if (!user) {
-    throw new Error("Пользователь не найден");
-  }
-
-  return await user.update(updateData);
-};
-
 async function createAdmin() {
   async function hash(password) {
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
@@ -139,8 +126,6 @@ async function createAdmin() {
     }
   } catch (error) {
     logger.error("❌ Ошибка при создании админа:", error);
-  } finally {
-    await db.close();
   }
 }
 
