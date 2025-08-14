@@ -29,9 +29,6 @@ app.delete(
   async (req, res) => {
     try {
       const { id } = req.body;
-      const path = `/var/www/human-atlas-tiles/tiles/${id}`;
-
-      await fs.promises.rm(path, { recursive: true, force: true });
 
       await OrganModel.destroy({ where: { id } });
 
