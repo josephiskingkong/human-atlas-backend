@@ -8,6 +8,7 @@ const { AnswerModel } = require("./models/AnswerModel");
 const { TestResultModel } = require("./models/TestResultModel");
 const { TestSessionModel } = require("./models/TestSessionModel");
 const { UserAnswerModel } = require("./models/UserAnswerModel");
+const { logger } = require("../config/logger");
 
 // Функция для настройки ассоциаций между моделями
 function setupAssociations() {
@@ -92,9 +93,9 @@ async function init() {
     await TestSessionModel.sync({ alter: true });
     await UserAnswerModel.sync({ alter: true });
 
-    console.log("Database synchronized successfully");
+    logger.info("Database synchronized successfully");
   } catch (error) {
-    console.error("Error synchronizing database:", error);
+    logger.error("Error synchronizing database:", error);
   }
 }
 
