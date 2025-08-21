@@ -27,7 +27,7 @@ app.get("/v1/organs/get/:id", requireParamFields(["id"]), async (req, res) => {
     const organ = await OrganModel.findOne({ where: { id } });
 
     if (!organ) {
-      res.status(404).send({ error: "Organ not found" });
+      return res.status(404).send({ error: "Organ not found" });
     }
 
     return res.status(200).json({

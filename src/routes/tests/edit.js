@@ -46,7 +46,7 @@ app.put(
 
       res.status(200).json({ message: "Тест успешно обновлён", test });
     } catch (error) {
-      console.error("Ошибка при обновлении теста:", error);
+      logger.error("Ошибка при обновлении теста:", error);
       res.status(500).json({ message: "Ошибка сервера" });
     }
   }

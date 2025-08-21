@@ -9,6 +9,7 @@ app.put("/v1/organs/edit", authenticateToken, async (req, res) => {
 
   try {
     const organ = await OrganModel.findByPk(id);
+
     if (!organ) {
       return res.status(404).json({ error: "Organ not found" });
     }
