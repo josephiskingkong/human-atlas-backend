@@ -11,8 +11,8 @@ const corsOptions = {
   origin: [
     "http://localhost:3000",
     "https://josephiskingkong.github.io",
-    "https://humanatlas.top",
-    "https://api.humanatlas.top",
+    "https://morphology.kemsu.ru",
+    "https://morphology.kemsu.ru/api",
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
