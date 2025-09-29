@@ -116,6 +116,8 @@ async function createAdmin() {
 
             await UserModel.create({
                 username: adminUsername,
+                firstName: firstName,
+                lastName: lastName,
                 email: adminEmail,
                 hashedPassword,
                 role: 'admin'
