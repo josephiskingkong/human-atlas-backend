@@ -70,7 +70,7 @@ app.get("/v1/tests/:id", requireParamFields(["id"]), async (req, res) => {
  */
 app.get(
   "/v1/tests/:testId/questions",
-  authenticateToken,
+  // authenticateToken,
   requireParamFields(["testId"]),
   async (req, res) => {
     try {
