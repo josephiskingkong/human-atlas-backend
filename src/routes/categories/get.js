@@ -58,10 +58,18 @@ app.get(
     try {
       const { categoryid } = req.params;
 
-      const categories = await CategoryModel.findAll({
-        where: { categoryId: categoryid },
-        order: [["id", "ASC"]],
-      });
+      let categories;
+
+      if (!categoryid) {
+        categories = await CategoryModel.findAll({
+          order: [["id", "ASC"]],
+        });
+      } else {
+        categories = await CategoryModel.findAll({
+          where: { categoryId: categoryid },
+          order: [["id", "ASC"]],
+        });
+      }
 
       if (categories.length === 0) {
         return res.status(200).send([]);
