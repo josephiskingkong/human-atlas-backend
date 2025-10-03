@@ -51,48 +51,44 @@ app.get("/v1/categories/get-mains/", async (req, res) => {
  * @returns {Object} - JSON массив объектов с данными точек
  */
 
-app.get(
-  "/v1/categories/get-by-categoryid/:categoryid",
-  requireParamFields(["categoryid"]),
-  async (req, res) => {
-    try {
-      const { categoryid } = req.params;
+app.get("/v1/categories/get-by-categoryid/:categoryid?", async (req, res) => {
+  try {
+    const { categoryid } = req.params;
 
-      let categories;
+    let categories;
 
-      if (!categoryid) {
-        categories = await CategoryModel.findAll({
-          order: [["id", "ASC"]],
-        });
-      } else {
-        categories = await CategoryModel.findAll({
-          where: { categoryId: categoryid },
-          order: [["id", "ASC"]],
-        });
-      }
-
-      if (categories.length === 0) {
-        return res.status(200).send([]);
-      }
-
-      return res.status(200).json(
-        categories.map((category) => ({
-          id: category.id,
-          name: category.name,
-          categoryId: category.categoryId,
-        }))
-      );
-    } catch (e) {
-      logger.error(
-        `Error while getting categories by category id: ${colorText(
-          e.message,
-          "red"
-        )}`
-      );
-      res.status(500).send({ error: e.message });
+    if (!categoryid || categoryid === "undefined" || categoryid === "null") {
+      categories = await CategoryModel.findAll({
+        order: [["id", "ASC"]],
+      });
+    } else {
+      categories = await CategoryModel.findAll({
+        where: { categoryId: Number(categoryid) },
+        order: [["id", "ASC"]],
+      });
     }
+
+    if (categories.length === 0) {
+      return res.status(200).send([]);
+    }
+
+    return res.status(200).json(
+      categories.map((category) => ({
+        id: category.id,
+        name: category.name,
+        categoryId: category.categoryId,
+      }))
+    );
+  } catch (e) {
+    logger.error(
+      `Error while getting categories by category id: ${colorText(
+        e.message,
+        "red"
+      )}`
+    );
+    res.status(500).send({ error: e.message });
   }
-);
+});
 
 /**
  * Эндпоинт для получения информации о категории по её ID
