@@ -26,7 +26,7 @@ app.post(
   requireBodyFields(["id", "name"]),
   async (req, res) => {
     try {
-      const { id, name } = req.body;
+      const { id, name, categoryId } = req.body;
 
       if (name === undefined) {
         return res
@@ -34,8 +34,16 @@ app.post(
           .json({ error: "Имя категории должно быть строкой!" });
       }
 
+      const category = await CategoryModel.findByPk(categoryId);
+
+      if (!category) {
+        return res
+          .status(400)
+          .json({ error: "Родительская категория не найдена!" });
+      }
+
       const [updatedRows] = await CategoryModel.update(
-        { name },
+        { name, categoryId },
         { where: { id } }
       );
 
