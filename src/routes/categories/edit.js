@@ -42,6 +42,12 @@ app.post(
           .json({ error: "Родительская категория не найдена!" });
       }
 
+      if (Number(categoryId) === Number(id)) {
+        return res
+          .status(400)
+          .json({ error: "Категория не может являться родителем сама себе!" });
+      }
+
       const [updatedRows] = await CategoryModel.update(
         { name, categoryId },
         { where: { id } }
