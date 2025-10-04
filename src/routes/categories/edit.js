@@ -48,8 +48,6 @@ app.post(
           .json({ error: "Категория не может являться родителем сама себе!" });
       }
 
-      console.log(categoryId);
-
       const [updatedRows] = await CategoryModel.update(
         { name, categoryId },
         { where: { id } }
