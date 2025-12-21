@@ -16,6 +16,10 @@ const OrganModel = db.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    detailedDescription: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     synonym: {
       type: DataTypes.TEXT,
       allowNull: false,
