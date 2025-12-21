@@ -19,7 +19,9 @@ app.put("/v1/organs/edit", authenticateToken, async (req, res) => {
 
     await organ.save();
 
-    logger.info(`Organ updated successfully: ${organ.id}`);
+    logger.info(
+      `Organ updated successfully: ${organ.id}, ${organ.name}, ${organ.detailedDescription}`
+    );
     return res.json({ message: "Organ updated successfully", organ });
   } catch (error) {
     logger.error(`Failed to update organ: ${error.message}`);
