@@ -4,7 +4,7 @@ const { OrganModel } = require("../../db/models/OrganModel");
 const { authenticateToken } = require("../users/auth");
 
 app.put("/v1/organs/edit", authenticateToken, async (req, res) => {
-  const { id, name, categoryId } = req.body;
+  const { id, name, details, categoryId } = req.body;
 
   try {
     const organ = await OrganModel.findByPk(id);
@@ -14,6 +14,7 @@ app.put("/v1/organs/edit", authenticateToken, async (req, res) => {
     }
 
     if (name !== undefined) organ.name = name;
+    if (details !== undefined) organ.detailedDescription = details;
     if (categoryId !== undefined) organ.categoryid = categoryId;
 
     await organ.save();
